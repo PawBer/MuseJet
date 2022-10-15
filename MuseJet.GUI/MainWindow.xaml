@@ -1,0 +1,29 @@
+﻿<Window x:Class="MuseJet.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MuseJet.GUI"
+        xmlns:command="clr-namespace:MuseJet.GUI.Commands"
+        xmlns:viewmodels="clr-namespace:MuseJet.GUI.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.ColumnSpan="3" Content="{Binding CurrentStation.Name}"/>
+        <Button Grid.Row="1" Grid.ColumnSpan="3" Content="Change Station" Command="{Binding ChangeStationCommand}"/>
+        <Button Grid.Row="2" Grid.Column="0" Content="Play" Command="{Binding PlayCommand}"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="Pause" Command="{Binding PauseCommand}"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="Stop" Command="{Binding StopCommand}"/>
+    </Grid>
+</Window>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuseJet.GUI", "MuseJet.GUI\MuseJet.GUI.csproj", "{41ED326C-BCE5-4EF2-9E8A-DC717F2574CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuseJet.Common", "MuseJet.Common\MuseJet.Common.csproj", "{00D715B9-7AF5-461A-9C10-9835B6BAEDE3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41ED326C-BCE5-4EF2-9E8A-DC717F2574CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41ED326C-BCE5-4EF2-9E8A-DC717F2574CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41ED326C-BCE5-4EF2-9E8A-DC717F2574CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41ED326C-BCE5-4EF2-9E8A-DC717F2574CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00D715B9-7AF5-461A-9C10-9835B6BAEDE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D715B9-7AF5-461A-9C10-9835B6BAEDE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D715B9-7AF5-461A-9C10-9835B6BAEDE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D715B9-7AF5-461A-9C10-9835B6BAEDE3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7EE78F72-A6AA-4F97-B373-9C92AA537E93}
+	EndGlobalSection
+EndGlobal
