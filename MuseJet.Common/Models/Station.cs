@@ -8,7 +8,7 @@ namespace MuseJet.Common.Models
 {
     public struct Station
     {
-        public string Name { get; init; }
-        public string Url { get; init; }
+        public string Name { get; set; }
+        public string Url { get; set; }
     }
 }

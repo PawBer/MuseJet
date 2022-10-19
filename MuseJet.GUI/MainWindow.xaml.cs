@@ -28,12 +28,17 @@ namespace MuseJet.GUI
             InitializeComponent();
             ViewModel = new();
             this.DataContext = ViewModel;
-            Closing += dispose_ViewModel;
+            Closing += DisposeViewModel;
         }
 
-        private void dispose_ViewModel(object sender, EventArgs e)
+        private void DisposeViewModel(object? sender, EventArgs e)
         {
             ViewModel.Dispose();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ViewModel.ChangeStation(ViewModel.CurrentStation);
         }
     }
 }

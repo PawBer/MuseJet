@@ -8,22 +8,35 @@
         xmlns:viewmodels="clr-namespace:MuseJet.GUI.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MuseJet" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.ColumnSpan="3" Content="{Binding CurrentStation.Name}"/>
-        <Button Grid.Row="1" Grid.ColumnSpan="3" Content="Change Station" Command="{Binding ChangeStationCommand}"/>
-        <Button Grid.Row="2" Grid.Column="0" Content="Play" Command="{Binding PlayCommand}"/>
-        <Button Grid.Row="2" Grid.Column="1" Content="Pause" Command="{Binding PauseCommand}"/>
-        <Button Grid.Row="2" Grid.Column="2" Content="Stop" Command="{Binding StopCommand}"/>
+        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" SelectionChanged="ListBox_SelectionChanged" Grid.Row="0" Grid.Column="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <Label Content="{Binding Name}"/>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+            <Button Content="Add Station" Command="{Binding AddStationCommand}"/>
+            <Button Content="Delete Station" Command="{Binding DeleteStationCommand}"/>
+            <Button Content="Edit Station" Command="{Binding EditStationCommand}" CommandParameter="{Binding CurrentStation}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Width="100" Content="Play" Command="{Binding PlayCommand}"/>
+            <Button Width="100" Content="Pause" Command="{Binding PauseCommand}"/>
+            <Button Width="100" Content="Stop" Command="{Binding StopCommand}"/>
+            <Label MinWidth="200" Content="{Binding CurrentStation.Name}"/>
+        </StackPanel>
     </Grid>
 </Window>

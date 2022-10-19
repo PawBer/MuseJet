@@ -19,23 +19,23 @@ namespace MuseJet.GUI.Views
     /// <summary>
     /// Interaction logic for StationChangeView.xaml
     /// </summary>
-    public partial class StationChangeView : Window
+    public partial class AddStationView : Window
     {
-        public MainWindowViewModel RootViewModel { get; set; } 
+        public MainWindowViewModel Root { get; set; } 
+        public AddStationViewModel ViewModel { get; set; }
 
-        public StationChangeView(MainWindowViewModel viewModel)
+        public AddStationView(MainWindowViewModel viewModel)
         {
             InitializeComponent();
-            RootViewModel = viewModel;
+            Root = viewModel;
+            ViewModel = new();
+            this.DataContext = ViewModel;
         }
 
         public void button_SubmitStation(object sender, EventArgs e)
         {
-            string name = NameTextBox.Text;
-            string url = UrlTextBox.Text;
-            Station station = new() { Name = name, Url = url };
-            RootViewModel.ChangeStation(station);
-            RootViewModel.CurrentStation = station;
+            Station station = new() { Name = ViewModel.Name, Url = ViewModel.Url };
+            Root.AddStation(station);
             Close();
         }
     }
