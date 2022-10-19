@@ -21,7 +21,7 @@ namespace MuseJet.GUI.Commands
             Root = viewModel;
         }
 
-        public bool CanExecute(object? parameter) => !Root.CurrentStation.Name.Equals("Select a Station");
+        public bool CanExecute(object? parameter) => Root.CurrentStation.Name != MainWindowViewModel.EmptyStation.Name;
 
         public void Execute(object? parameter)
         {

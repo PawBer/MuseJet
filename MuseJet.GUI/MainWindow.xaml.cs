@@ -39,6 +39,7 @@ namespace MuseJet.GUI
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ViewModel.ChangeStation(ViewModel.CurrentStation);
+            ViewModel.Stop();
         }
     }
 }

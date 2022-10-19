@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using NAudio.CoreAudioApi;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,9 @@ namespace MuseJet.Common.Models
     public class StationPlayer : IDisposable
     {
         private MediaFoundationReader _mediaFoundationReader;
-        private WasapiOut _wasapiOut;
-        private float _volume = 0.01F;
+        private DirectSoundOut _directOut;
+        private WaveChannel32 _waveChannel;
+        private float _volume = 0.3F;
 
         public float Volume
         {
@@ -19,11 +21,11 @@ namespace MuseJet.Common.Models
             set {
                 if (value < 0.0F && value > 1.0F)
                 {
-                    _wasapiOut.Volume = 0.0F;
+                    _waveChannel.Volume = 0.0F;
                     _volume = 0.0F;
                 } else
                 {
-                    _wasapiOut.Volume = value;
+                    _waveChannel.Volume = value;
                     _volume = value;
                 }
             }
@@ -31,19 +33,27 @@ namespace MuseJet.Common.Models
 
         public StationPlayer(Station station)
         {
-            _mediaFoundationReader = new(station.Url);
-            _wasapiOut = new();
-            _wasapiOut.Init(_mediaFoundationReader);
-            _wasapiOut.Volume = _volume;
+            try
+            {
+                _mediaFoundationReader = new(station.Url);
+                _directOut = new();
+                _waveChannel = new(_mediaFoundationReader);
+                _directOut.Init(_waveChannel);
+                _waveChannel.Volume = _volume;
+            } catch
+            {
+                throw new Exception();
+            }
+            
         }
 
-        public PlaybackState GetState() => _wasapiOut.PlaybackState;
+        public PlaybackState GetState() => _directOut.PlaybackState;
 
-        public void Play() => _wasapiOut.Play();
+        public void Play() => _directOut.Play();
 
-        public void Pause() => _wasapiOut.Pause();
+        public void Pause() => _directOut.Pause();
 
-        public void Stop() => _wasapiOut.Stop();
+        public void Stop() => _directOut.Stop();
 
         #region Disposal
         private bool _disposed = false;
@@ -58,7 +68,8 @@ namespace MuseJet.Common.Models
             if (disposing)
             {
                 _mediaFoundationReader.Dispose();
-                _wasapiOut.Dispose();
+                _directOut.Dispose();
+                _waveChannel.Dispose();
             }
 
             _disposed = true;

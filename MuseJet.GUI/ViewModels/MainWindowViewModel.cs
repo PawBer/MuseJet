@@ -12,11 +12,14 @@ using System.Windows.Input;
 using MuseJet.GUI.Views;
 using MuseJet.Common.Services;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace MuseJet.GUI.ViewModels
 {
     public class MainWindowViewModel : IDisposable, INotifyPropertyChanged
     {
+        public static Station EmptyStation = new() { Name = "Select a Station", Url = "" };
         public StationPlayer? StationPlayer { get; set; } = null;
         private Station _currentStation;
         public Station CurrentStation
@@ -36,18 +39,16 @@ namespace MuseJet.GUI.ViewModels
         {
             _stationService = new();
             StationList = new(_stationService.GetAll());
-            CurrentStation = new() { Name = "Select a Station", Url = "" };
+            CurrentStation = EmptyStation;
 
-            PlayCommand = new RelayCommand((obj) => { StationPlayer.Play(); },
-                (obj) => StationPlayer != null && (StationPlayer.GetState() != PlaybackState.Playing));
+            PlayCommand = new RelayCommand(Play,
+                (obj) => StationPlayer == null || (StationPlayer.GetState() != PlaybackState.Playing));
 
-            PauseCommand = new RelayCommand((obj) => { StationPlayer.Pause(); },
+            PauseCommand = new RelayCommand(Pause,
                 (obj) => StationPlayer != null && (StationPlayer.GetState() == PlaybackState.Playing));
 
-            StopCommand = new RelayCommand((obj) => { StationPlayer.Stop(); },
+            StopCommand = new RelayCommand(Stop,
                 (obj) => StationPlayer != null && (StationPlayer.GetState() != PlaybackState.Stopped));
-
-            ChangeStationCommand = new ChangeStationCommand(this);
 
             AddStationCommand = new RelayCommand((obj) =>
             {
@@ -57,21 +58,48 @@ namespace MuseJet.GUI.ViewModels
 
             DeleteStationCommand = new RelayCommand((obj) =>
             {
+                if (StationPlayer != null) Stop();
                 RemoveStation(CurrentStation);
-                StationPlayer.Dispose();
-                StationPlayer = null;
-                CurrentStation = new() { Name = "Select a Station", Url = "" };
+                CurrentStation = EmptyStation;
             },
-            (obj) => !CurrentStation.Name.Equals("Select a Station"));
+            (obj) => CurrentStation.Name != EmptyStation.Name);
 
             EditStationCommand = new EditStationCommand(this);
         }
 
         public void ChangeStation(Station station)
         {
-            if (StationPlayer != null) StationPlayer.Dispose();
-            StationPlayer = new(station);
             CurrentStation = station;
+        }
+
+        public void Play(object? sender = null)
+        {
+            if (StationPlayer != null && StationPlayer.GetState() == PlaybackState.Paused) StationPlayer.Play();
+            if (StationPlayer != null) StationPlayer.Dispose();
+
+            try
+            {
+                StationPlayer = new(CurrentStation);
+                StationPlayer.Play();
+            }
+            catch
+            {
+                MessageBox.Show("The URL doesn't lead to an audio file.\nYou should delete or edit it.", "Bad URL", MessageBoxButton.OK, MessageBoxImage.Error);
+                StationPlayer = null;
+            }
+        }
+
+        public void Pause(object? sender = null)
+        {
+            if (StationPlayer == null) return;
+            StationPlayer.Pause();
+        }
+
+        public void Stop(object? sender = null)
+        {
+            if (StationPlayer == null) return;
+            StationPlayer.Dispose();
+            StationPlayer = null;
         }
 
         public void AddStation(Station station)
@@ -89,14 +117,16 @@ namespace MuseJet.GUI.ViewModels
         public void EditStation(Station station)
         {
             _stationService.Edit(station);
-            StationList = new ObservableCollection<Station>(_stationService.GetAll());
+            var oldStation = StationList.First(s => s.Name == station.Name);
+            StationList.Remove(oldStation);
+            StationList.Add(station);
             CurrentStation = station;
+            Stop();
         }
 
         public ICommand PlayCommand { get; set; }
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
-        public ICommand ChangeStationCommand { get; set; }
         public ICommand AddStationCommand { get; set; }
         public ICommand DeleteStationCommand { get; set; }
         public ICommand EditStationCommand { get; set; }
