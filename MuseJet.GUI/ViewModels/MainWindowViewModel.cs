@@ -165,6 +165,7 @@ namespace MuseJet.GUI.ViewModels
             {
                 if (StationPlayer == null) return;
                 StationPlayer.Dispose();
+                _stationService.Dispose();
             }
 
             _disposed = true;
