@@ -48,7 +48,7 @@ namespace MuseJet.GUI.ViewModels
         public MainWindowViewModel()
         {
             _stationService = new();
-            StationList = new(_stationService.GetAll());
+            StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
             CurrentStation = EmptyStation;
 
             PlayCommand = new RelayCommand(Play,
