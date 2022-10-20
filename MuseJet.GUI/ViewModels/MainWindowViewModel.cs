@@ -14,6 +14,7 @@ using MuseJet.Common.Services;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Data;
 
 namespace MuseJet.GUI.ViewModels
 {
@@ -33,7 +34,16 @@ namespace MuseJet.GUI.ViewModels
         }
 
         private StationService _stationService;
-        public ObservableCollection<Station> StationList { get; set; }
+        private ObservableCollection<Station> _stationList;
+        public ObservableCollection<Station> StationList
+        {
+            get => _stationList;
+            set
+            {
+                _stationList = value;
+                OnPropertyChanged();
+            }
+        }
 
         public MainWindowViewModel()
         {
@@ -84,7 +94,11 @@ namespace MuseJet.GUI.ViewModels
             }
             catch
             {
-                MessageBox.Show("The URL doesn't lead to an audio file.\nYou should delete or edit it.", "Bad URL", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("The URL doesn't lead to an audio file.\nYou should delete or edit it.",
+                    "Bad URL",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
                 StationPlayer = null;
             }
         }
@@ -105,7 +119,7 @@ namespace MuseJet.GUI.ViewModels
         public void AddStation(Station station)
         {
             _stationService.Add(station);
-            StationList.Add(station);
+            StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
         }
 
         public void RemoveStation(Station station)
@@ -117,9 +131,7 @@ namespace MuseJet.GUI.ViewModels
         public void EditStation(Station station)
         {
             _stationService.Edit(station);
-            var oldStation = StationList.First(s => s.Name == station.Name);
-            StationList.Remove(oldStation);
-            StationList.Add(station);
+            StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
             CurrentStation = station;
             Stop();
         }
