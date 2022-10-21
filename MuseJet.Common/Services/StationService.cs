@@ -10,14 +10,11 @@ namespace MuseJet.Common.Services
 {
     public class StationService : IDisposable
     {
-        private string _userFiles = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MuseJet");
         private SqliteConnection _dbConnection;
 
         public StationService()
         {
-            if (!Directory.Exists(_userFiles)) Directory.CreateDirectory(_userFiles);
-
-            string dbPath = Path.Combine(_userFiles, "station.db");
+            string dbPath = Path.Combine(ConfigService.UserFilesDir, "station.db");
             string connectionString = $"Data Source={dbPath}";
 
             _dbConnection = new(connectionString);

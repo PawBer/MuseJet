@@ -36,7 +36,7 @@
             <Button Width="100" Content="Play" Command="{Binding PlayCommand}"/>
             <Button Width="100" Content="Pause" Command="{Binding PauseCommand}"/>
             <Button Width="100" Content="Stop" Command="{Binding StopCommand}"/>
-            <Label MinWidth="200" Content="{Binding CurrentStation.Name}"/>
+            <Slider Minimum="0.0" Maximum="1.0" Width="100" Value="{Binding Volume}"/>
         </StackPanel>
     </Grid>
 </Window>

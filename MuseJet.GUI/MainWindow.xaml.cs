@@ -33,6 +33,7 @@ namespace MuseJet.GUI
 
         private void DisposeViewModel(object? sender, EventArgs e)
         {
+            ViewModel.Config.Save();
             ViewModel.Dispose();
         }
 

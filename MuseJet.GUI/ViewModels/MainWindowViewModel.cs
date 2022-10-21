@@ -21,7 +21,26 @@ namespace MuseJet.GUI.ViewModels
     public class MainWindowViewModel : IDisposable, INotifyPropertyChanged
     {
         public static Station EmptyStation = new() { Name = "Select a Station", Url = "" };
+        public ConfigService Config { get; }
         public StationPlayer? StationPlayer { get; set; } = null;
+        public float Volume
+        {
+            get
+            {
+                return Config.Volume;
+            }
+            set
+            {
+                if (StationPlayer == null)
+                {
+                    Config.Volume = value;
+                    return;
+                }
+                Config.Volume = value;
+                StationPlayer.Volume = value;
+                OnPropertyChanged();
+            }
+        }
         private Station _currentStation;
         public Station CurrentStation
         {
@@ -47,12 +66,23 @@ namespace MuseJet.GUI.ViewModels
 
         public MainWindowViewModel()
         {
+            Config = new();
             _stationService = new();
             StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
             CurrentStation = EmptyStation;
 
             PlayCommand = new RelayCommand(Play,
-                (obj) => StationPlayer == null || (StationPlayer.GetState() != PlaybackState.Playing));
+                (obj) => 
+                {
+                    if (CurrentStation.Name == EmptyStation.Name)
+                        return false;
+                    else if (StationPlayer == null && CurrentStation.Name != EmptyStation.Name)
+                        return true;
+                    else if (StationPlayer.GetState() != PlaybackState.Playing)
+                        return true;
+                    else
+                        return false;
+                });
 
             PauseCommand = new RelayCommand(Pause,
                 (obj) => StationPlayer != null && (StationPlayer.GetState() == PlaybackState.Playing));
@@ -91,6 +121,7 @@ namespace MuseJet.GUI.ViewModels
             {
                 StationPlayer = new(CurrentStation);
                 StationPlayer.Play();
+                StationPlayer.Volume = Volume;
             }
             catch
             {

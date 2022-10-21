@@ -1,4 +1,5 @@
-﻿using NAudio.CoreAudioApi;
+﻿using MuseJet.Common.Models;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MuseJet.Common.Models
+namespace MuseJet.Common.Services
 {
     public class StationPlayer : IDisposable
     {
@@ -17,16 +18,16 @@ namespace MuseJet.Common.Models
 
         public float Volume
         {
-            get => _volume;
-            set {
+            get => _waveChannel.Volume;
+            set
+            {
                 if (value < 0.0F && value > 1.0F)
                 {
                     _waveChannel.Volume = 0.0F;
-                    _volume = 0.0F;
-                } else
+                }
+                else
                 {
                     _waveChannel.Volume = value;
-                    _volume = value;
                 }
             }
         }
@@ -40,11 +41,12 @@ namespace MuseJet.Common.Models
                 _waveChannel = new(_mediaFoundationReader);
                 _directOut.Init(_waveChannel);
                 _waveChannel.Volume = _volume;
-            } catch
+            }
+            catch
             {
                 throw new Exception();
             }
-            
+
         }
 
         public PlaybackState GetState() => _directOut.PlaybackState;
