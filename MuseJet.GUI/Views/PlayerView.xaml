@@ -15,12 +15,18 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" Grid.Row="0" Grid.Column="0">
+        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="0" Grid.Column="0">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <WrapPanel>
-                        <Label Content="{Binding Name}"/>
-                    </WrapPanel>
+                    <StackPanel Width="Auto" Height="Auto" Orientation="Vertical">
+                        <Image Height="100" Width="100" Source="{Binding Icon}"/>
+                        <Label HorizontalAlignment="Center" Content="{Binding Name}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

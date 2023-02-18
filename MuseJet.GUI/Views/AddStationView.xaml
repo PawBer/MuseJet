@@ -7,37 +7,25 @@
         xmlns:viewmodels="clr-namespace:MuseJet.GUI.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:AddStationViewModel}"
         mc:Ignorable="d"
-        Title="Add Station" Height="150" Width="350">
-    <Grid>
+        FontSize="18"
+        Title="Add Station" Height="200" Width="500">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Padding="5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="Name"/>
-                <TextBox Grid.Column="1" MinWidth="100" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
-        </Border>
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Padding="5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="URL"/>
-                <TextBox Grid.Column="1" MinWidth="250" Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
-        </Border>
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Submit" Command="{Binding SubmitCommand}"/>
+        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Name"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Margin="0 5 0 5" MinWidth="100" VerticalAlignment="Center" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="URL"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="0 5 0 5" MinWidth="300" VerticalAlignment="Center" Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Image URL"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="0 5 0 5" MinWidth="300" VerticalAlignment="Center" Text="{Binding ImageUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 5 0 0" Content="Submit" Command="{Binding SubmitCommand}"/>
     </Grid>
 </Window>

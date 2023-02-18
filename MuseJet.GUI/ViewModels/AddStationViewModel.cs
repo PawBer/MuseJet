@@ -21,13 +21,17 @@ namespace MuseJet.GUI.ViewModels
             _service = service;
             SubmitCommand = new RelayCommand((obj) =>
             {
-                _service.Add(new Station() { Name = Name, Url = Url });
+                if (_imageUrl == String.Empty)              
+                    _service.Add(new Station() { Name = Name, Url = Url, ImageUrl = null });               
+                else              
+                    _service.Add(new Station() { Name = Name, Url = Url, ImageUrl = _imageUrl });
                 OnRequestClose();
             }, null);
         }
 
         private string _name = String.Empty;
         private string _url = String.Empty;
+        private string _imageUrl = String.Empty;
 
         public string Name
         {
@@ -45,6 +49,16 @@ namespace MuseJet.GUI.ViewModels
             set
             {
                 _url = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ImageUrl
+        {
+            get => _imageUrl;
+            set
+            {
+                _imageUrl = value;
                 OnPropertyChanged();
             }
         }

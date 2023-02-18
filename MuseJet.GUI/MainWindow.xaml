@@ -9,7 +9,7 @@
         xmlns:views="clr-namespace:MuseJet.GUI.Views" 
         d:DataContext="{d:DesignInstance Type=vms:MainViewModel}"
         mc:Ignorable="d"
-        Title="MuseJet" Height="450" Width="800">
+        Title="MuseJet" Height="450" Width="800" FontSize="14">
     <Grid>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type vms:PlayerViewModel}">
