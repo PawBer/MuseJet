@@ -15,28 +15,27 @@ using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Data;
+using MuseJet.GUI.Events;
 
 namespace MuseJet.GUI.ViewModels
 {
-    public class MainWindowViewModel : IDisposable, INotifyPropertyChanged
+    public class PlayerViewModel : ViewModelBase, IDisposable
     {
         public static Station EmptyStation = new() { Name = "Select a Station", Url = "" };
-        public ConfigService Config { get; }
+        private ConfigService _config { get; }
+        private StationService _stationService;
         public StationPlayer? StationPlayer { get; set; } = null;
         public float Volume
         {
-            get
-            {
-                return Config.Volume;
-            }
+            get => _config.Volume;
             set
             {
                 if (StationPlayer == null)
                 {
-                    Config.Volume = value;
+                    _config.Volume = value;
                     return;
                 }
-                Config.Volume = value;
+                _config.Volume = value;
                 StationPlayer.Volume = value;
                 OnPropertyChanged();
             }
@@ -52,7 +51,6 @@ namespace MuseJet.GUI.ViewModels
             }
         }
 
-        private StationService _stationService;
         private ObservableCollection<Station> _stationList;
         public ObservableCollection<Station> StationList
         {
@@ -64,15 +62,16 @@ namespace MuseJet.GUI.ViewModels
             }
         }
 
-        public MainWindowViewModel()
+        public PlayerViewModel(StationService stationService, ConfigService configService)
         {
-            Config = new();
-            _stationService = new();
+            _stationService = stationService;
+            _config = configService;
+
             StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
             CurrentStation = EmptyStation;
 
             PlayCommand = new RelayCommand(Play,
-                (obj) => 
+                (obj) =>
                 {
                     if (CurrentStation.Name == EmptyStation.Name)
                         return false;
@@ -92,19 +91,52 @@ namespace MuseJet.GUI.ViewModels
 
             AddStationCommand = new RelayCommand((obj) =>
             {
-                AddStationView StationAddWindow = new(this);
-                StationAddWindow.ShowDialog();
+                AddStationViewModel vm = new(_stationService);
+                AddStationView view = new()
+                {
+                    DataContext = vm
+                };
+                vm.RequestClose += (o, a) => view.Close();
+                view.ShowDialog();
+            }, null);
+
+            EditStationCommand = new RelayCommand((obj) =>
+            {
+                EditStationViewModel vm = new(_stationService, CurrentStation);
+                EditStationView view = new()
+                {
+                    DataContext = vm
+                };
+                vm.RequestClose += (o, a) => view.Close();
+                view.ShowDialog();
             }, null);
 
             DeleteStationCommand = new RelayCommand((obj) =>
             {
-                if (StationPlayer != null) Stop();
-                RemoveStation(CurrentStation);
+                _stationService.Remove(CurrentStation);
                 CurrentStation = EmptyStation;
-            },
-            (obj) => CurrentStation.Name != EmptyStation.Name);
+            }, null);
 
-            EditStationCommand = new EditStationCommand(this);
+            _stationService.StationStateChanged += ((obj, args) =>
+            {
+                StationStateChangeEventArgs changeArgs = (StationStateChangeEventArgs)args;
+                switch (changeArgs.Type)
+                {
+                    case ChangeType.Add:
+                        StationList.Add(changeArgs.ChangedStation);
+                        break;
+                    case ChangeType.Edit:
+                        StationList.Remove(StationList.First(x => x.Name == changeArgs.ChangedStation.Name));
+                        StationList.Add(changeArgs.ChangedStation);
+                        StationList.OrderBy(s => s.Name);
+                        CurrentStation = changeArgs.ChangedStation;
+                        break;
+                    case ChangeType.Delete:
+                        StationList.Remove(changeArgs.ChangedStation);
+                        CurrentStation = EmptyStation;
+                        break;
+                }
+            });
         }
 
         public void ChangeStation(Station station)
@@ -147,25 +179,6 @@ namespace MuseJet.GUI.ViewModels
             StationPlayer = null;
         }
 
-        public void AddStation(Station station)
-        {
-            _stationService.Add(station);
-            StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
-        }
-
-        public void RemoveStation(Station station)
-        {
-            _stationService.Remove(station);
-            StationList.Remove(station);
-        }
-
-        public void EditStation(Station station)
-        {
-            _stationService.Edit(station);
-            StationList = new(_stationService.GetAll().OrderBy(s => s.Name));
-            CurrentStation = station;
-            Stop();
-        }
 
         public ICommand PlayCommand { get; set; }
         public ICommand PauseCommand { get; set; }
@@ -173,13 +186,6 @@ namespace MuseJet.GUI.ViewModels
         public ICommand AddStationCommand { get; set; }
         public ICommand DeleteStationCommand { get; set; }
         public ICommand EditStationCommand { get; set; }
-
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         #region Disposal
 

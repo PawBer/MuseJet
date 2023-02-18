@@ -20,27 +20,10 @@ namespace MuseJet.GUI
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-        public MainWindowViewModel ViewModel { get; set; }
-
+    { 
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new();
-            this.DataContext = ViewModel;
-            Closing += DisposeViewModel;
-        }
-
-        private void DisposeViewModel(object? sender, EventArgs e)
-        {
-            ViewModel.Config.Save();
-            ViewModel.Dispose();
-        }
-
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ViewModel.ChangeStation(ViewModel.CurrentStation);
-            ViewModel.Stop();
         }
     }
 }

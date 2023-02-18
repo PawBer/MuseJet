@@ -1,4 +1,6 @@
 ﻿using MuseJet.Common.Models;
+using MuseJet.Common.Services;
+using MuseJet.GUI.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,19 +12,29 @@ using System.Windows.Input;
 
 namespace MuseJet.GUI.ViewModels
 {
-    public class EditStationViewModel : INotifyPropertyChanged
+    public class EditStationViewModel : ViewModelBase
     {
+        private StationService _service;
         private string _name;
         private string _url;
+
+        public EditStationViewModel(StationService service, Station station)
+        {
+            _service = service;
+            _name = station.Name;
+            _url = station.Url;
+
+            SubmitCommand = new RelayCommand((obj) =>
+            {
+                Station newStation = new Station() { Name = Name, Url = Url };
+                _service.Edit(newStation);
+                OnRequestClose();
+            }, null);
+        }
 
         public string Name
         {
             get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
         }
 
         public string Url
@@ -35,11 +47,13 @@ namespace MuseJet.GUI.ViewModels
             }
         }
 
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public ICommand SubmitCommand { get; set; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler RequestClose;
+
+        public void OnRequestClose()
+        {
+            RequestClose?.Invoke(this, new EventArgs());
+        }
     }
 }

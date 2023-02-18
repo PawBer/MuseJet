@@ -21,26 +21,9 @@ namespace MuseJet.GUI.Views
     /// </summary>
     public partial class EditStationView : Window
     {
-        public MainWindowViewModel Root { get; set; }
-        private EditStationViewModel ViewModel { get; set; }
-
-        public EditStationView(MainWindowViewModel viewModel, Station stationToEdit)
+        public EditStationView()
         {
             InitializeComponent();
-            Root = viewModel;
-            ViewModel = new()
-            {
-                Name = stationToEdit.Name,
-                Url = stationToEdit.Url,
-            };
-            this.DataContext = ViewModel;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Station stationToEdit = new() { Name = ViewModel.Name, Url = ViewModel.Url };
-            Root.EditStation(stationToEdit);
-            Close();
         }
     }
 }

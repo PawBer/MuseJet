@@ -1,7 +1,4 @@
-﻿using MuseJet.Common.Models;
-using MuseJet.Common.Services;
-using MuseJet.GUI.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MuseJet.GUI.Views
 {
     /// <summary>
-    /// Interaction logic for StationChangeView.xaml
+    /// Interaction logic for SearchView.xaml
     /// </summary>
-    public partial class AddStationView : Window
-    { 
-        public AddStationView()
+    public partial class SearchView : UserControl
+    {
+        public SearchView()
         {
             InitializeComponent();
         }

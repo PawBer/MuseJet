@@ -38,6 +38,6 @@
                 <TextBox Grid.Column="1" MinWidth="250" Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Border>
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Submit" Click="button_SubmitStation"/>
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Submit" Command="{Binding SubmitCommand}"/>
     </Grid>
 </Window>

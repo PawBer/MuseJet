@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using MuseJet.Common.Models;
 using Microsoft.Data.Sqlite;
+using MuseJet.GUI.Events;
+using System.IO;
 
 namespace MuseJet.Common.Services
 {
@@ -53,6 +55,8 @@ namespace MuseJet.Common.Services
 
             command.Prepare();
             command.ExecuteNonQuery();
+
+            OnStationStateChanged(ChangeType.Add, station);
         }
 
         public void Remove(Station station)
@@ -64,6 +68,8 @@ namespace MuseJet.Common.Services
 
             command.Prepare();
             command.ExecuteNonQuery();
+
+            OnStationStateChanged(ChangeType.Delete, station);
         }
 
         public void Edit(Station station)
@@ -76,6 +82,15 @@ namespace MuseJet.Common.Services
 
             command.Prepare();
             command.ExecuteNonQuery();
+
+            OnStationStateChanged(ChangeType.Edit, station);
+        }
+
+        public event EventHandler StationStateChanged;
+
+        protected virtual void OnStationStateChanged(ChangeType type, Station station)
+        {
+            StationStateChanged?.Invoke(this, new StationStateChangeEventArgs() { Type = type, ChangedStation = station});
         }
 
         #region Disposal
