@@ -19,17 +19,17 @@ namespace MuseJet.GUI.ViewModels
         private string _url;
         private string _imageUrl;
 
-        public EditStationViewModel(StationService service, StationViewModel station)
+        public EditStationViewModel(StationService service, Station station)
         {
             _service = service;
-            _name = station.Station.Name;
-            _url = station.Station.Url;
-            _imageUrl = station.Station.ImageUrl;
+
+            _name = station.Name;
+            _url = station.Url;
+            _imageUrl = station.ImageUrl;
 
             SubmitCommand = new RelayCommand((obj) =>
             {
-                Station newStation = new Station() { Name = Name, Url = Url, ImageUrl = _imageUrl };
-                _service.Edit(newStation);
+                _service.Edit(station);
                 OnRequestClose();
             }, null);
         }

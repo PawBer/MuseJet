@@ -21,7 +21,7 @@ namespace MuseJet.GUI.ViewModels
 {
     public class PlayerViewModel : ViewModelBase, IDisposable
     {
-        public static StationViewModel EmptyStation = new(new Station() { Name = "Select a Station", Url = "", ImageUrl = null });
+        public static StationViewModel EmptyStation = new(null, new Station() { Name = "Select a Station", Url = "", ImageUrl = null });
         private ConfigService _config { get; }
         private StationService _stationService;
         public StationPlayer? StationPlayer { get; set; } = null;
@@ -69,7 +69,7 @@ namespace MuseJet.GUI.ViewModels
 
             StationList = new(_stationService.GetAll()
                 .OrderBy(s => s.Name)
-                .Select(s => new StationViewModel(s)));
+                .Select(s => new StationViewModel(_stationService, s)));
 
             CurrentStation = EmptyStation;
 
@@ -103,35 +103,19 @@ namespace MuseJet.GUI.ViewModels
                 view.ShowDialog();
             }, null);
 
-            EditStationCommand = new RelayCommand((obj) =>
-            {
-                EditStationViewModel vm = new(_stationService, CurrentStation);
-                EditStationView view = new()
-                {
-                    DataContext = vm
-                };
-                vm.RequestClose += (o, a) => view.Close();
-                view.ShowDialog();
-            }, null);
-
-            DeleteStationCommand = new RelayCommand((obj) =>
-            {
-                _stationService.Remove(CurrentStation.Station);
-            }, null);
-
             _stationService.StationStateChanged += ((obj, args) =>
             {
                 StationStateChangeEventArgs changeArgs = (StationStateChangeEventArgs)args;
                 switch (changeArgs.Type)
                 {
                     case ChangeType.Add:
-                        StationList.Add(new StationViewModel(changeArgs.ChangedStation));
+                        StationList.Add(new StationViewModel(_stationService, changeArgs.ChangedStation));
                         break;
                     case ChangeType.Edit:
                         StationList.Remove(StationList.First(x => x.Name == changeArgs.ChangedStation.Name));
-                        StationList.Add(new StationViewModel(changeArgs.ChangedStation));
+                        StationList.Add(new StationViewModel(_stationService, changeArgs.ChangedStation));
                         StationList.OrderBy(s => s.Name);
-                        CurrentStation = new StationViewModel(changeArgs.ChangedStation);
+                        CurrentStation = new StationViewModel(_stationService, changeArgs.ChangedStation);
                         break;
                     case ChangeType.Delete:
                         StationList.Remove(StationList.First(x => x.Name == changeArgs.ChangedStation.Name));
@@ -143,7 +127,7 @@ namespace MuseJet.GUI.ViewModels
 
         public void ChangeStation(Station station)
         {
-            CurrentStation = new StationViewModel(station);
+            CurrentStation = new StationViewModel(_stationService, station);
         }
 
         public void Play(object? sender = null)
@@ -186,8 +170,6 @@ namespace MuseJet.GUI.ViewModels
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
         public ICommand AddStationCommand { get; set; }
-        public ICommand DeleteStationCommand { get; set; }
-        public ICommand EditStationCommand { get; set; }
 
         #region Disposal
 
