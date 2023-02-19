@@ -29,7 +29,7 @@ namespace MuseJet.GUI.ViewModels
 
             SubmitCommand = new RelayCommand((obj) =>
             {
-                _service.Edit(station);
+                _service.Edit(new Station() { Name = _name, Url = _url, ImageUrl = _imageUrl});
                 OnRequestClose();
             }, null);
         }

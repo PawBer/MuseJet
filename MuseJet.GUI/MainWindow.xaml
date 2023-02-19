@@ -4,19 +4,43 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MuseJet.GUI"
-        xmlns:command="clr-namespace:MuseJet.GUI.Commands"
+        xmlns:nav="clr-namespace:MuseJet.GUI.Services"
+        xmlns:converters="clr-namespace:MuseJet.GUI.Converters"
         xmlns:vms="clr-namespace:MuseJet.GUI.ViewModels"
         xmlns:views="clr-namespace:MuseJet.GUI.Views" 
         d:DataContext="{d:DesignInstance Type=vms:MainViewModel}"
         mc:Ignorable="d"
-        Title="MuseJet" Height="450" Width="800" FontSize="14">
+        Title="MuseJet" Height="800" Width="1400" FontSize="14">
+    <Window.Resources>
+        <converters:EqualValueToParameterConverter x:Key="EqualValueToParameterConverter" />
+    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type vms:PlayerViewModel}">
                 <views:PlayerView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:SearchViewModel}">
+                <views:SearchView />
+            </DataTemplate>
         </Grid.Resources>
-
-        <ContentControl Content="{Binding CurrentViewModel}"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+            <RadioButton
+                Margin="5"
+                Command="{Binding ChangeViewModelCommand}"
+                CommandParameter="{x:Static nav:NavDest.Player}"
+                Content="Player"
+                IsChecked="{Binding CurrentViewModel,Mode=OneWay,Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vms:PlayerViewModel}}"/>
+            <RadioButton
+                Margin="5"
+                Command="{Binding ChangeViewModelCommand}"
+                CommandParameter="{x:Static nav:NavDest.Search}"
+                Content="Search"
+                IsChecked="{Binding CurrentViewModel,Mode=OneWay,Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vms:SearchViewModel}}"/>
+        </StackPanel>
+        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}"/>
     </Grid>
 </Window>

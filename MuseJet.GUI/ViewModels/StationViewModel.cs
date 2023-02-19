@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -25,9 +26,14 @@ namespace MuseJet.GUI.ViewModels
             get
             {
                 if (Station.ImageUrl is null)
+                {
                     return new BitmapImage(new Uri("pack://application:,,,/Resources/note-icon.jpg"));
+                }
                 else
+                {
+                    //TODO Check if response leads to image
                     return new BitmapImage(new Uri(Station.ImageUrl));
+                }
             }
         }
 

@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace MuseJet.GUI.Services
 {
+    public enum NavDest
+    {
+        Player,
+        Search
+    }
+
     public class NavigationService<T> where T : ViewModelBase
     {
         private readonly NavigationState _navigationStore;

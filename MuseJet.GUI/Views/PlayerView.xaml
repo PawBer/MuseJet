@@ -11,11 +11,7 @@
             <RowDefinition Height="4*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="0" Grid.Column="0">
+        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="0">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
@@ -38,14 +34,12 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
-            <Button Content="Add Station" Command="{Binding AddStationCommand}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Width="100" Content="Play" Command="{Binding PlayCommand}"/>
             <Button Width="100" Content="Pause" Command="{Binding PauseCommand}"/>
             <Button Width="100" Content="Stop" Command="{Binding StopCommand}"/>
             <Slider Minimum="0.0" Maximum="1.0" Width="100" Value="{Binding Volume}"/>
+            <Button Content="Add Station" Command="{Binding AddStationCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -21,6 +21,10 @@ namespace MuseJet.GUI.HostBuilders
                 services.AddSingleton<Func<PlayerViewModel>>((s) => () => s.GetRequiredService<PlayerViewModel>());
                 services.AddSingleton<NavigationService<PlayerViewModel>>();
 
+                services.AddTransient<SearchViewModel>();
+                services.AddSingleton<Func<SearchViewModel>>((s) => () => s.GetRequiredService<SearchViewModel>());
+                services.AddSingleton<NavigationService<SearchViewModel>>();
+
                 services.AddSingleton<MainViewModel>();
             });
 
