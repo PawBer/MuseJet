@@ -15,6 +15,7 @@ namespace MuseJet.GUI.ViewModels
     public class EditStationViewModel : ViewModelBase
     {
         private StationService _service;
+        private Guid _id;
         private string _name;
         private string _url;
         private string _imageUrl;
@@ -23,13 +24,14 @@ namespace MuseJet.GUI.ViewModels
         {
             _service = service;
 
+            _id = station.Id;
             _name = station.Name;
             _url = station.Url;
             _imageUrl = station.ImageUrl;
 
             SubmitCommand = new RelayCommand((obj) =>
             {
-                _service.Edit(new Station() { Name = _name, Url = _url, ImageUrl = _imageUrl});
+                _service.Edit(new Station() { Id = _id, Name = _name, Url = _url, ImageUrl = _imageUrl});
                 OnRequestClose();
             }, null);
         }
@@ -37,6 +39,11 @@ namespace MuseJet.GUI.ViewModels
         public string Name
         {
             get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
         }
 
         public string Url

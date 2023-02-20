@@ -21,7 +21,7 @@
                 <DataTemplate>
                     <StackPanel Width="150" Height="Auto" Orientation="Vertical">
                         <Image Height="100" Width="100" Stretch="UniformToFill" Source="{Binding Icon}"/>
-                        <Label HorizontalAlignment="Center" Content="{Binding Name}"/>
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" Text="{Binding Name}"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>

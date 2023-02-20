@@ -21,7 +21,7 @@ namespace MuseJet.GUI.ViewModels
 {
     public class PlayerViewModel : ViewModelBase, IDisposable
     {
-        public static StationViewModel EmptyStation = new(null, new Station() { Name = "Select a Station", Url = "", ImageUrl = null });
+        public static StationViewModel EmptyStation = new(null, new Station() {Id = new(), Name = "Select a Station", Url = "", ImageUrl = null });
         private ConfigService _config { get; }
         private StationService _stationService;
         public StationPlayer? StationPlayer { get; set; } = null;
@@ -48,6 +48,7 @@ namespace MuseJet.GUI.ViewModels
             {
                 _currentStation = value;
                 OnPropertyChanged();
+                OnCurrentStationChanged();
             }
         }
 
@@ -112,22 +113,25 @@ namespace MuseJet.GUI.ViewModels
                         StationList.Add(new StationViewModel(_stationService, changeArgs.ChangedStation));
                         break;
                     case ChangeType.Edit:
-                        StationList.Remove(StationList.First(x => x.Name == changeArgs.ChangedStation.Name));
+                        StationList.Remove(StationList.First(x => x.Id == changeArgs.ChangedStation.Id));
                         StationList.Add(new StationViewModel(_stationService, changeArgs.ChangedStation));
                         StationList.OrderBy(s => s.Name);
                         CurrentStation = new StationViewModel(_stationService, changeArgs.ChangedStation);
                         break;
                     case ChangeType.Delete:
-                        StationList.Remove(StationList.First(x => x.Name == changeArgs.ChangedStation.Name));
+                        StationList.Remove(StationList.First(x => x.Id == changeArgs.ChangedStation.Id));
                         CurrentStation = EmptyStation;
                         break;
                 }
             });
         }
 
-        public void ChangeStation(Station station)
+        public void OnCurrentStationChanged()
         {
-            CurrentStation = new StationViewModel(_stationService, station);
+            if (CurrentStation == EmptyStation)
+                return;
+            else
+                Play();
         }
 
         public void Play(object? sender = null)

@@ -22,7 +22,7 @@ namespace MuseJet.Common.Services
             _dbConnection = new(connectionString);
             _dbConnection.Open();
 
-            string createTableQueryText = "CREATE TABLE IF NOT EXISTS stations(name TEXT PRIMARY KEY, url TEXT NOT NULL, image_url TEXT);";
+            string createTableQueryText = "CREATE TABLE IF NOT EXISTS stations(id TEXT NOT NULL PRIMARY KEY, name TEXT NOT NULL, url TEXT NOT NULL, image_url TEXT);";
 
             SqliteCommand command = new(createTableQueryText, _dbConnection);
             command.ExecuteNonQuery();
@@ -38,16 +38,30 @@ namespace MuseJet.Common.Services
 
             while (reader.Read())
             {
-                string name = reader.GetString(0);
-                string url = reader.GetString(1);
+                Guid guid = new(reader.GetString(0));
+                string name = reader.GetString(1);
+                string url = reader.GetString(2);
                 string? imageUrl = null;
-                if (!reader.IsDBNull(2))
-                    imageUrl = reader.GetString(2);
-                Station station = new() { Name = name, Url = url, ImageUrl = imageUrl };
+                if (!reader.IsDBNull(3))
+                    imageUrl = reader.GetString(3);
+                Station station = new() {Id = guid, Name = name, Url = url, ImageUrl = imageUrl };
                 stations.Add(station);
             }
 
             return stations;
+        }
+
+        public bool Exists(Guid id)
+        {
+            string statement = "SELECT 1 FROM stations WHERE id=@id";
+
+            SqliteCommand command = new(statement, _dbConnection);
+            command.Parameters.AddWithValue("@id", id.ToString());
+
+            command.Prepare();
+            SqliteDataReader reader = command.ExecuteReader();
+
+            return reader.Read();
         }
 
         public void Add(Station station)
@@ -75,10 +89,10 @@ namespace MuseJet.Common.Services
 
         public void Remove(Station station)
         {
-            string statement = "DELETE FROM stations WHERE name=@name;";
+            string statement = "DELETE FROM stations WHERE id=@id;";
             SqliteCommand command = new(statement, _dbConnection);
 
-            command.Parameters.AddWithValue("@name", station.Name);
+            command.Parameters.AddWithValue("@name", station.Id.ToString());
 
             command.Prepare();
             command.ExecuteNonQuery();
@@ -91,12 +105,13 @@ namespace MuseJet.Common.Services
             string statement;
 
             if (station.ImageUrl is not null)
-                statement = "UPDATE stations SET url=@url, image_url=@image_url WHERE name=@name;";
+                statement = "UPDATE stations SET name=@name, url=@url, image_url=@image_url WHERE id=@id;";
             else
-                statement = "UPDATE stations SET url=@url WHERE name=@name;";
+                statement = "UPDATE stations SET name=@name, url=@url WHERE id=@id;";
 
             SqliteCommand command = new(statement, _dbConnection);
 
+            command.Parameters.AddWithValue("@id", station.Id.ToString());
             command.Parameters.AddWithValue("@name", station.Name);
             command.Parameters.AddWithValue("@url", station.Url);
 

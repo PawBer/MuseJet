@@ -21,6 +21,7 @@ namespace MuseJet.GUI.ViewModels
 
         public string Name => Station.Name;
         public string Url => Station.Url;
+        public Guid Id => Station.Id;
         public BitmapImage Icon
         {
             get

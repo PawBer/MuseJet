@@ -7,11 +7,13 @@ using MuseJet.GUI.HostBuilders;
 using MuseJet.GUI.Services;
 using MuseJet.GUI.Stores;
 using MuseJet.GUI.ViewModels;
+using RadioBrowser;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
@@ -33,6 +35,7 @@ namespace MuseJet.GUI
             {
                 services.AddSingleton<ConfigService>();
                 services.AddSingleton<StationService>();
+                services.AddSingleton<RadioBrowserClient>();
 
                 services.AddSingleton<NavigationState>();
 
