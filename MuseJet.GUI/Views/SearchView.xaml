@@ -13,8 +13,17 @@
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
-        <fa:ImageAwesome Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityConverter}}" Icon="Refresh" Spin="True" Height="48" Width="48"/>
-        <ScrollViewer Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}" x:Name="scrollViewer" HorizontalScrollBarVisibility="Disabled">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Back" Visibility="{Binding IsSearching, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding BackCommand}"/>
+            <TextBox MinWidth="100" Text="{Binding SearchTerm}"/>
+            <Button Content="Search" Command="{Binding SubmitSearchCommand}"/>
+        </StackPanel>
+        <fa:ImageAwesome Grid.Row="1" Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityConverter}}" Icon="Refresh" Spin="True" Height="48" Width="48"/>
+        <ScrollViewer Grid.Row="1" Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}" x:Name="scrollViewer" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemsSource="{Binding SearchResults}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
