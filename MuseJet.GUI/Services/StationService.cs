@@ -69,12 +69,13 @@ namespace MuseJet.Common.Services
             string statement;
 
             if (station.ImageUrl is not null)
-                statement = "INSERT INTO stations(name, url, image_url) VALUES(@name, @url, @image_url);";
+                statement = "INSERT INTO stations(id, name, url, image_url) VALUES(@id, @name, @url, @image_url);";
             else
-                statement = "INSERT INTO stations(name, url) VALUES(@name, @url);";
+                statement = "INSERT INTO stations(id, name, url) VALUES(@id, @name, @url);";
 
             SqliteCommand command = new(statement, _dbConnection);
 
+            command.Parameters.AddWithValue("@id", station.Id.ToString());
             command.Parameters.AddWithValue("@name", station.Name);
             command.Parameters.AddWithValue("@url", station.Url);
 
@@ -92,7 +93,7 @@ namespace MuseJet.Common.Services
             string statement = "DELETE FROM stations WHERE id=@id;";
             SqliteCommand command = new(statement, _dbConnection);
 
-            command.Parameters.AddWithValue("@name", station.Id.ToString());
+            command.Parameters.AddWithValue("@id", station.Id.ToString());
 
             command.Prepare();
             command.ExecuteNonQuery();

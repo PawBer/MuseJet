@@ -21,7 +21,7 @@ namespace MuseJet.GUI.ViewModels
 {
     public class PlayerViewModel : ViewModelBase, IDisposable
     {
-        public static StationViewModel EmptyStation = new(null, new Station() {Id = new(), Name = "Select a Station", Url = "", ImageUrl = null });
+        public static StationViewModel EmptyStation = new(null, new Station() {Id = new("00000000-0000-0000-0000-000000000000"), Name = "Select a Station", Url = "", ImageUrl = null });
         private ConfigService _config { get; }
         private StationService _stationService;
         public StationPlayer? StationPlayer { get; set; } = null;
@@ -130,6 +130,8 @@ namespace MuseJet.GUI.ViewModels
         {
             if (CurrentStation == EmptyStation)
                 return;
+            else if (CurrentStation is null)
+                Stop();
             else
                 Play();
         }
@@ -188,15 +190,14 @@ namespace MuseJet.GUI.ViewModels
 
             if (disposing)
             {
-                if (StationPlayer == null) return;
-                StationPlayer.Dispose();
-                _stationService.Dispose();
+                Stop();
+                if (StationPlayer is null) return;
             }
 
             _disposed = true;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

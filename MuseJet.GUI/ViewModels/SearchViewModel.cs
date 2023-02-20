@@ -1,4 +1,5 @@
 ﻿using MuseJet.Common.Services;
+using MuseJet.GUI.Events;
 using RadioBrowser;
 using System;
 using System.Collections.Generic;
@@ -15,22 +16,52 @@ namespace MuseJet.GUI.ViewModels
     {
         private readonly RadioBrowserClient _browser;
         private readonly StationService _service;
+        private ObservableCollection<SearchItemViewModel> _searchResults;
+        private bool _isLoading;
 
-        public ObservableCollection<SearchItemViewModel> SearchResults { get; set; }
+        public ObservableCollection<SearchItemViewModel> SearchResults
+        {
+            get => _searchResults;
+            set
+            {
+                _searchResults = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         public SearchViewModel(RadioBrowserClient browser, StationService service)
         {
             _browser = browser;
             _service = service;
+            _isLoading = true;
+
+            _service.StationStateChanged += OnStationStateChanged;
 
             Task.Run(async () =>
             {
-                var results = await _browser.Search.ByNameAsync("Epic Rock Radio");
-                SearchResults = new(results.Select(s => new SearchItemViewModel(_service, s)));
+                var results = await _browser.Stations.GetByVotesAsync(100);
+                SearchResults = new(results.Select(s => new SearchItemViewModel(_service, s)).Where(s => s.Visible));
+                IsLoading = false;
             });
+        }
 
-            Thread.Sleep(5000);
-            Debug.Print("");
+        public void OnStationStateChanged(object? sender, EventArgs args)
+        {
+            StationStateChangeEventArgs parameter = (StationStateChangeEventArgs)args;
+            if (parameter.Type == ChangeType.Add)
+            {
+                SearchResults.Remove(SearchResults.First(s => s.Id == parameter.ChangedStation.Id));
+            }
         }
     }
 }
