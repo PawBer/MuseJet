@@ -30,7 +30,7 @@ namespace MuseJet.GUI.Views
         private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             ScrollViewer scrollViewer = (ScrollViewer)sender;
-            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            if (scrollViewer.VerticalOffset + 100 >= scrollViewer.ScrollableHeight)
             {
                 SearchViewModel vm = (SearchViewModel)DataContext;
                 vm.OnGetToEnd();

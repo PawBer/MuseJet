@@ -44,18 +44,10 @@ namespace MuseJet.GUI.ViewModels
         {
             _browser = browser;
             _service = service;
-            _isLoading = true;
             _searchResults = new();
+            OnGetToEnd();
 
             _service.StationStateChanged += OnStationStateChanged;
-
-            Task.Run(async () =>
-            {
-                var results = await _browser.Stations.GetByVotesAsync(_count);
-                _count += 100;
-                SearchResults = new(results.Select(s => new SearchItemViewModel(_service, s)).Where(s => s.Visible));
-                IsLoading = false;
-            });
         }
 
         public void OnStationStateChanged(object? sender, EventArgs args)
