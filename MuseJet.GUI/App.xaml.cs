@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using MuseJet.Common.Services;
 using MuseJet.GUI.HostBuilders;
 using MuseJet.GUI.Services;
+using MuseJet.GUI.State;
 using MuseJet.GUI.Stores;
 using MuseJet.GUI.ViewModels;
 using RadioBrowser;
@@ -38,6 +39,7 @@ namespace MuseJet.GUI
                 services.AddSingleton<RadioBrowserClient>();
 
                 services.AddSingleton<NavigationState>();
+                services.AddSingleton<StationState>();
 
                 services.AddSingleton(s => new MainWindow()
                 {

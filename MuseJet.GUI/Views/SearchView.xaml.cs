@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MuseJet.GUI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,17 @@ namespace MuseJet.GUI.Views
         public SearchView()
         {
             InitializeComponent();
+            scrollViewer.ScrollChanged += OnScrollChanged;
+        }
+
+        private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ScrollViewer scrollViewer = (ScrollViewer)sender;
+            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            {
+                SearchViewModel vm = (SearchViewModel)DataContext;
+                vm.OnGetToEnd();
+            }
         }
     }
 }

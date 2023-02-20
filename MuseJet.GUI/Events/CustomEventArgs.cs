@@ -19,4 +19,9 @@ namespace MuseJet.GUI.Events
         public ChangeType Type { get; set; }
         public Station ChangedStation { get; set; }
     }
+
+    public class SelectionChangedEventArgs : EventArgs
+    {
+        public Station SelectedStation { get; set; }
+    }
 }

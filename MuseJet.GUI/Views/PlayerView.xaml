@@ -7,11 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="4*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="0">
+        <ListBox ItemsSource="{Binding StationList}" SelectedItem="{Binding CurrentStation}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
@@ -34,12 +30,5 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Width="100" Content="Play" Command="{Binding PlayCommand}"/>
-            <Button Width="100" Content="Pause" Command="{Binding PauseCommand}"/>
-            <Button Width="100" Content="Stop" Command="{Binding StopCommand}"/>
-            <Slider Minimum="0.0" Maximum="1.0" Width="100" Value="{Binding Volume}"/>
-            <Button Content="Add Station" Command="{Binding AddStationCommand}"/>
-        </StackPanel>
     </Grid>
 </UserControl>

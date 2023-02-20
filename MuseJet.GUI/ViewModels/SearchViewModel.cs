@@ -18,6 +18,7 @@ namespace MuseJet.GUI.ViewModels
         private readonly StationService _service;
         private ObservableCollection<SearchItemViewModel> _searchResults;
         private bool _isLoading;
+        private uint _count = 100;
 
         public ObservableCollection<SearchItemViewModel> SearchResults
         {
@@ -49,7 +50,8 @@ namespace MuseJet.GUI.ViewModels
 
             Task.Run(async () =>
             {
-                var results = await _browser.Stations.GetByVotesAsync(100);
+                var results = await _browser.Stations.GetByVotesAsync(_count);
+                _count += 100;
                 SearchResults = new(results.Select(s => new SearchItemViewModel(_service, s)).Where(s => s.Visible));
                 IsLoading = false;
             });
@@ -62,6 +64,18 @@ namespace MuseJet.GUI.ViewModels
             {
                 SearchResults.Remove(SearchResults.First(s => s.Id == parameter.ChangedStation.Id));
             }
+        }
+
+        public void OnGetToEnd()
+        {
+            IsLoading = true;
+            Task.Run(async () =>
+            {
+                var results = await _browser.Stations.GetByVotesAsync(_count);
+                _count += 100;
+                SearchResults = new(results.Select(s => new SearchItemViewModel(_service, s)).Where(s => s.Visible));
+                IsLoading = false;
+            });
         }
     }
 }
