@@ -20,7 +20,7 @@ namespace MuseJet.GUI.State
             }
         }
 
-        public event Action CurrentStationChanged;
+        public event Action? CurrentStationChanged;
 
         public void OnCurrentStationChanged()
         {

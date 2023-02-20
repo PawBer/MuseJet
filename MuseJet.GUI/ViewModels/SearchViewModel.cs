@@ -45,6 +45,7 @@ namespace MuseJet.GUI.ViewModels
             _browser = browser;
             _service = service;
             _isLoading = true;
+            _searchResults = new();
 
             _service.StationStateChanged += OnStationStateChanged;
 

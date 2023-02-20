@@ -18,7 +18,7 @@ namespace MuseJet.GUI.ViewModels
         private Guid _id;
         private string _name;
         private string _url;
-        private string _imageUrl;
+        private string? _imageUrl;
 
         public EditStationViewModel(StationService service, Station station)
         {
@@ -56,7 +56,7 @@ namespace MuseJet.GUI.ViewModels
             }
         }
 
-        public string ImageUrl
+        public string? ImageUrl
         {
             get => _imageUrl;
             set
@@ -68,7 +68,7 @@ namespace MuseJet.GUI.ViewModels
 
         public ICommand SubmitCommand { get; set; }
 
-        public event EventHandler RequestClose;
+        public event EventHandler? RequestClose;
 
         public void OnRequestClose()
         {

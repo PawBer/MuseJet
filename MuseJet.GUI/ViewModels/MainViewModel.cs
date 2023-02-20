@@ -34,7 +34,7 @@ namespace MuseJet.GUI.ViewModels
             get => _configService.Volume;
             set
             {
-                if (StationPlayer == null)
+                if (StationPlayer is null)
                 {
                     _configService.Volume = value;
                     return;
@@ -85,7 +85,7 @@ namespace MuseJet.GUI.ViewModels
                         return false;
                     else if (StationPlayer == null && CurrentStation is not null)
                         return true;
-                    else if (StationPlayer.GetState() != PlaybackState.Playing)
+                    else if (StationPlayer!.GetState() != PlaybackState.Playing)
                         return true;
                     else
                         return false;

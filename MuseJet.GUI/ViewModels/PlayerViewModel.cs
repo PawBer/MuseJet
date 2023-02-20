@@ -48,12 +48,12 @@ namespace MuseJet.GUI.ViewModels
             }
         }
 
-        public PlayerViewModel(StationService stationService, ConfigService configService, StationState stationState)
+        public PlayerViewModel(StationService stationService, StationState stationState)
         {
             _stationService = stationService;
             _stationState = stationState;
 
-            StationList = new(_stationService.GetAll()
+            _stationList = new(_stationService.GetAll()
                 .OrderBy(s => s.Name)
                 .Select(s => new StationViewModel(_stationService, s)));
 
