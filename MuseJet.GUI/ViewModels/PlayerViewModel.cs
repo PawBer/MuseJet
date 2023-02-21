@@ -70,10 +70,12 @@ namespace MuseJet.GUI.ViewModels
                         StationList.Remove(StationList.First(x => x.Id == changeArgs.ChangedStation.Id));
                         StationList.Add(newModel);
                         StationList.OrderBy(s => s.Name);
-                        CurrentStation = newModel;
+                        CurrentStation = null;
                         break;
                     case ChangeType.Delete:
                         StationList.Remove(StationList.First(x => x.Id == changeArgs.ChangedStation.Id));
+                        if (changeArgs.ChangedStation.Id == CurrentStation?.Id)
+                            CurrentStation = null;
                         break;
                 }
             });

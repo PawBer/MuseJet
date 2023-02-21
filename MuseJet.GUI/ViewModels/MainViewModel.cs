@@ -129,8 +129,6 @@ namespace MuseJet.GUI.ViewModels
             OnPropertyChanged(nameof(Icon));
             OnPropertyChanged(nameof(CurrentStationName));
             if (CurrentStation is null)
-                return;
-            else if (CurrentStation is null)
                 Stop();
             else
                 Play();
