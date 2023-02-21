@@ -1,4 +1,7 @@
-# MuseJet - WPF Internet Radio Player
+# MuseJet - Internet Radio Player
 
-This is a work in progress internet radio player player.
-Right now the only feature is playing MP3 streams.
+MuseJet has access to the [RadioBrowser](https://www.radio-browser.info/) database which gives access to over 30,000 radio stations from around the world.  
+The design is heavily inspired by [Shortwave](https://gitlab.gnome.org/World/Shortwave).
+
+## Screenshots
+![Screenshot of main screen](Screenshots/Main.png)
