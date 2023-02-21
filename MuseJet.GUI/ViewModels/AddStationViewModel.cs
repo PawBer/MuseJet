@@ -22,9 +22,9 @@ namespace MuseJet.GUI.ViewModels
             SubmitCommand = new RelayCommand((obj) =>
             {
                 if (_imageUrl == String.Empty)              
-                    _service.Add(new Station() { Id = new(), Name = Name, Url = Url, ImageUrl = null });               
+                    _service.Add(new Station() { Id = Guid.NewGuid(), Name = Name, Url = Url, ImageUrl = null });               
                 else              
-                    _service.Add(new Station() { Id = new(), Name = Name, Url = Url, ImageUrl = _imageUrl });
+                    _service.Add(new Station() { Id = Guid.NewGuid(), Name = Name, Url = Url, ImageUrl = _imageUrl });
                 OnRequestClose();
             }, null);
         }

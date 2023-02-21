@@ -65,11 +65,12 @@ namespace MuseJet.GUI.ViewModels
                 {
                     case ChangeType.Add:
                         StationList.Add(newModel);
+                        StationList = new(StationList.OrderBy(s => s.Name));
                         break;
                     case ChangeType.Edit:
                         StationList.Remove(StationList.First(x => x.Id == changeArgs.ChangedStation.Id));
                         StationList.Add(newModel);
-                        StationList.OrderBy(s => s.Name);
+                        StationList = new(StationList.OrderBy(s => s.Name));
                         CurrentStation = null;
                         break;
                     case ChangeType.Delete:
