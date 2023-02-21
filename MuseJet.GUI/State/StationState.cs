@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace MuseJet.GUI.State
 {
@@ -17,6 +18,22 @@ namespace MuseJet.GUI.State
             {
                 _currentStation = value;
                 OnCurrentStationChanged();
+            }
+        }
+
+        public BitmapImage Icon
+        {
+            get
+            {              
+                if (_currentStation?.ImageUrl is null)
+                {
+                    return new BitmapImage(new Uri("pack://application:,,,/Resources/note-icon.jpg"));
+                }
+                else
+                {
+                    //TODO Check if response leads to image
+                    return new BitmapImage(new Uri(_currentStation?.ImageUrl));
+                }
             }
         }
 

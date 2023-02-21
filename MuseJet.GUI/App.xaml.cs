@@ -58,6 +58,10 @@ namespace MuseJet.GUI
             MainWindow = _host.Services.GetRequiredService<MainWindow>();
             MainWindow.Show();
 
+            MainWindow.Closing += (obj, e) => {
+                _host.Services.GetRequiredService<ConfigService>().Save();
+            };
+
             base.OnStartup(e);
         }
     }

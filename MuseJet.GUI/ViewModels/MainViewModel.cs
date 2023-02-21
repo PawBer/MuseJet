@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace MuseJet.GUI.ViewModels
 {
@@ -47,6 +48,16 @@ namespace MuseJet.GUI.ViewModels
         public Station? CurrentStation
         {
             get => _stationState.CurrentStation;
+        }
+
+        public string CurrentStationName
+        {
+            get => _stationState.CurrentStation?.Name ?? "Select a station";
+        }
+
+        public BitmapImage Icon
+        {
+            get => _stationState.Icon;
         }
 
         public MainViewModel(NavigationState navigationState,
@@ -115,6 +126,8 @@ namespace MuseJet.GUI.ViewModels
 
         public void OnCurrentStationChanged()
         {
+            OnPropertyChanged(nameof(Icon));
+            OnPropertyChanged(nameof(CurrentStationName));
             if (CurrentStation is null)
                 return;
             else if (CurrentStation is null)

@@ -15,9 +15,9 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Width="150" Height="Auto" Orientation="Vertical">
+                    <StackPanel Width="175" Height="Auto" Orientation="Vertical">
                         <Image Height="100" Width="100" Stretch="UniformToFill" Source="{Binding Icon}"/>
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center" Text="{Binding Name}"/>
+                        <TextBlock Padding="5" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Name}"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>

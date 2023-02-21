@@ -8,6 +8,7 @@
         xmlns:converters="clr-namespace:MuseJet.GUI.Converters"
         xmlns:vms="clr-namespace:MuseJet.GUI.ViewModels"
         xmlns:views="clr-namespace:MuseJet.GUI.Views" 
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         d:DataContext="{d:DesignInstance Type=vms:MainViewModel}"
         mc:Ignorable="d"
         Title="MuseJet" Height="800" Width="1400" FontSize="14">
@@ -18,8 +19,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
         <Grid.Resources>
             <DataTemplate DataType="{x:Type vms:PlayerViewModel}">
                 <views:PlayerView />
@@ -28,27 +32,60 @@
                 <views:SearchView />
             </DataTemplate>
         </Grid.Resources>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="+" Height="30" Width="30" Command="{Binding AddStationCommand}"/>
-            <RadioButton
+        <Grid Grid.ColumnSpan="2" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Button Margin="5" Grid.Column="0" Height="45" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding AddStationCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <fa:ImageAwesome Margin="5" Icon="Plus"/>
+                    <Label VerticalAlignment="Center">Add station manually</Label>
+                </StackPanel>
+            </Button>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel.Resources>
+                    <Style BasedOn="{StaticResource NavButton}" TargetType="RadioButton"/>
+                </StackPanel.Resources>
+                <RadioButton
                 Margin="5"
                 Command="{Binding ChangeViewModelCommand}"
                 CommandParameter="{x:Static nav:NavDest.Player}"
-                Content="Player"
-                IsChecked="{Binding CurrentViewModel,Mode=OneWay,Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vms:PlayerViewModel}}"/>
-            <RadioButton
+                IsChecked="{Binding CurrentViewModel,Mode=OneWay,Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vms:PlayerViewModel}}">
+                    <StackPanel Margin="5" Orientation="Horizontal" Width="100" Height="Auto">
+                        <fa:ImageAwesome Margin="5" Width="25" Height="25" Icon="Book"/>
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Center">Library</Label>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton
                 Margin="5"
                 Command="{Binding ChangeViewModelCommand}"
                 CommandParameter="{x:Static nav:NavDest.Search}"
-                Content="Search"
-                IsChecked="{Binding CurrentViewModel,Mode=OneWay,Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vms:SearchViewModel}}"/>
-        </StackPanel>
-        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}"/>
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Button Width="100" Content="Play" Command="{Binding PlayCommand}"/>
-            <Button Width="100" Content="Pause" Command="{Binding PauseCommand}"/>
-            <Button Width="100" Content="Stop" Command="{Binding StopCommand}"/>
-            <Slider Minimum="0.0" Maximum="1.0" Width="100" Value="{Binding Volume}"/>
+                IsChecked="{Binding CurrentViewModel,Mode=OneWay,Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vms:SearchViewModel}}">
+                    <StackPanel Margin="5" Orientation="Horizontal" Width="100" Height="Auto">
+                        <fa:ImageAwesome Margin="5" Width="25" Height="25" Icon="Search"/>
+                        <Label HorizontalAlignment="Center" VerticalAlignment="Center">Search</Label>
+                    </StackPanel>
+                </RadioButton>
+            </StackPanel>
+        </Grid>
+        <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding CurrentViewModel}"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <Image Source="{Binding Icon, Mode=OneWay}" Width="250" Height="250" Margin="10"/>
+            <TextBlock Text="{Binding CurrentStationName}" TextWrapping="Wrap" Margin="5" HorizontalAlignment="Center" FontSize="18"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Padding="5" Margin="5" Width="25" Height="25" Command="{Binding PlayCommand}">
+                    <fa:ImageAwesome Icon="Play"/>
+                </Button>
+                <Button Padding="5" Margin="5" Width="25" Height="25" Command="{Binding PauseCommand}">
+                    <fa:ImageAwesome Icon="Pause"/>
+                </Button>
+                <Button Padding="5" Margin="5" Width="25" Height="25" Command="{Binding StopCommand}">
+                    <fa:ImageAwesome Icon="Stop"/>
+                </Button>
+            </StackPanel>
+            <Slider Minimum="0.0" Maximum="1.0" Width="150" Margin="10" Value="{Binding Volume}"/>
         </StackPanel>
     </Grid>
 </Window>
