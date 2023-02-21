@@ -16,6 +16,8 @@ namespace MuseJet.Common.Services
 
         public StationService()
         {
+            if (!Directory.Exists(ConfigService.UserFilesDir)) Directory.CreateDirectory(ConfigService.UserFilesDir);
+
             string dbPath = Path.Combine(ConfigService.UserFilesDir, "station.db");
             string connectionString = $"Data Source={dbPath}";
 
