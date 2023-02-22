@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -19,16 +20,15 @@ namespace MuseJet.GUI.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly NavigationState _navigationState;
         private readonly NavigationService<PlayerViewModel> _goToPlayer;
         private readonly NavigationService<SearchViewModel> _goToSearch;
 
         private readonly ConfigService _configService;
         private readonly StationService _stationService;
+        private readonly NavigationState _navigationState;
         private readonly StationState _stationState;
 
         public ViewModelBase CurrentViewModel => _navigationState.CurrentViewModel;
-
         public StationPlayer? StationPlayer { get; set; } = null;
         public float Volume
         {
@@ -58,6 +58,16 @@ namespace MuseJet.GUI.ViewModels
         public BitmapImage Icon
         {
             get => _stationState.Icon;
+        }
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnLoadingChanged();
+            }
         }
 
         public MainViewModel(NavigationState navigationState,
@@ -92,7 +102,9 @@ namespace MuseJet.GUI.ViewModels
             PlayCommand = new RelayCommand(Play,
                 (obj) =>
                 {
-                    if (CurrentStation is null)
+                    if (IsLoading)
+                        return false;
+                    else if (CurrentStation is null)
                         return false;
                     else if (StationPlayer == null && CurrentStation is not null)
                         return true;
@@ -134,27 +146,41 @@ namespace MuseJet.GUI.ViewModels
                 Play();
         }
 
+        public void OnLoadingChanged()
+        {
+            OnPropertyChanged(nameof(IsLoading));
+            if (IsLoading == false)
+            {
+                Application.Current.Dispatcher.Invoke(() => { CommandManager.InvalidateRequerySuggested(); });
+            }
+        }
+
         public void Play(object? sender = null)
         {
             if (CurrentStation is null) return;
             if (StationPlayer != null && StationPlayer.GetState() == PlaybackState.Paused) StationPlayer.Play();
             if (StationPlayer != null) StationPlayer.Dispose();
 
-            try
+            IsLoading = true;
+            Task.Run(() =>
             {
-                StationPlayer = new((Station)CurrentStation);
-                StationPlayer.Play();
-                StationPlayer.Volume = Volume;
-            }
-            catch
-            {
-                MessageBox.Show("The URL doesn't lead to an audio file.\nYou should delete or edit it.",
-                    "Bad URL",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                try
+                {
+                    StationPlayer = new((Station)CurrentStation);
+                    StationPlayer.Play();
+                    StationPlayer.Volume = Volume;
+                    IsLoading = false;
+                }
+                catch
+                {
+                    MessageBox.Show("The URL doesn't lead to an audio file.\nYou should delete or edit it.",
+                        "Bad URL",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
 
-                StationPlayer = null;
-            }
+                    StationPlayer = null;
+                }
+            });
         }
 
         public void Pause(object? sender = null)
