@@ -158,8 +158,12 @@ namespace MuseJet.GUI.ViewModels
         public void Play(object? sender = null)
         {
             if (CurrentStation is null) return;
-            if (StationPlayer != null && StationPlayer.GetState() == PlaybackState.Paused) StationPlayer.Play();
-            if (StationPlayer != null) StationPlayer.Dispose();
+            if (StationPlayer is not null && StationPlayer.GetState() == PlaybackState.Paused)
+            {
+                StationPlayer.Play();
+                return;
+            }
+            StationPlayer?.Dispose();
 
             IsLoading = true;
             Task.Run(() =>
